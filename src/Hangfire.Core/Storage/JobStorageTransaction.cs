@@ -30,8 +30,9 @@ namespace Hangfire.Storage
         public abstract void ExpireJob(string jobId, TimeSpan expireIn);
         public abstract void PersistJob(string jobId);
         public abstract void SetJobState(string jobId, IState state);
-        public abstract void AddJobState(string jobId, IState state);
-        public abstract void AddToQueue(string queue, string jobId);
+		public abstract void AddJobLog(string jobId, string messageClass, string messageText);
+		public abstract void AddJobState(string jobId, IState state);
+		public abstract void AddToQueue(string queue, string jobId);
         public abstract void IncrementCounter(string key);
         public abstract void IncrementCounter(string key, TimeSpan expireIn);
         public abstract void DecrementCounter(string key);

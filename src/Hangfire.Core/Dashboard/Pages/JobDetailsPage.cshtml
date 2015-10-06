@@ -114,12 +114,32 @@
                 </div>
             </div>
 
-            if (job.History.Count > 0)
-            {
+	        if (job.Log.Any())
+	        {
+		        <h3>Log</h3>
+
+				var entriesCreationTime = job.History.Select(x => x.CreatedAt).ToArray();
+				var nextEntry = 1;
+				foreach (var logItem in job.Log)
+				{
+					<div class="job-log-item @logItem.MessageClass">
+						<div class="pull-right heading" title="@logItem.MessageClass">
+							<span>
+								@Html.ToHumanDuration(logItem.CreatedAt - (nextEntry < entriesCreationTime.Length ? entriesCreationTime[nextEntry] : job.CreatedAt))
+								@{ nextEntry++; }
+							</span>
+						</div>
+						<pre>@logItem.MessageText</pre>
+					</div>
+				}
+			}
+
+			if (job.History.Any())
+			{
                 <h3>History</h3>
                 var index = 0;
 
-                DateTime[] entriesCreationTime = job.History.Select(x => x.CreatedAt).ToArray();
+                var entriesCreationTime = job.History.Select(x => x.CreatedAt).ToArray();
                 var nextEntry = 1;
 
                 foreach (var entry in job.History)

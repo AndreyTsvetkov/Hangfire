@@ -24,6 +24,7 @@ using Hangfire.Annotations;
 using Hangfire.Common;
 using Hangfire.States;
 using Hangfire.Storage;
+// ReSharper disable RedundantAnonymousTypePropertyName
 
 namespace Hangfire.SqlServer
 {
@@ -97,7 +98,24 @@ update [{0}].Job set StateId = SCOPE_IDENTITY(), StateName = @name where Id = @i
                 }));
         }
 
-        public override void AddJobState(string jobId, IState state)
+	    public override void AddJobLog(string jobId, string messageClass, string messageText)
+	    {
+			string addStateSql = string.Format(@"
+insert into [{0}].Log (JobId, CreatedAt, MessageClass, MessageText)
+values (@jobId, @createdAt, @messageClass, @messageText)", _storage.GetSchemaName());
+
+			QueueCommand(x => x.Execute(
+				addStateSql,
+				new
+				{
+					jobId = jobId,
+					createdAt = DateTime.UtcNow,
+					messageClass = messageClass,
+					messageText = messageText
+				}));
+		}
+
+	    public override void AddJobState(string jobId, IState state)
         {
             string addStateSql = string.Format(@"
 insert into [{0}].State (JobId, Name, Reason, CreatedAt, Data)
@@ -329,6 +347,7 @@ update [{0}].[List] set ExpireAt = null where [Key] = @key", _storage.GetSchemaN
             QueueCommand(x => x.Execute(query, new { key = key }));
         }
 
+	    // ReSharper disable once MemberCanBePrivate.Global
         internal void QueueCommand(Action<SqlConnection> action)
         {
             _commandQueue.Enqueue(action);
@@ -336,17 +355,17 @@ update [{0}].[List] set ExpireAt = null where [Key] = @key", _storage.GetSchemaN
 
         private void AcquireListLock()
         {
-            AcquireLock(String.Format("Hangfire:List:Lock"));
+            AcquireLock("Hangfire:List:Lock");
         }
 
         private void AcquireSetLock()
         {
-            AcquireLock(String.Format("Hangfire:Set:Lock"));
+            AcquireLock("Hangfire:Set:Lock");
         }
 
         private void AcquireHashLock()
         {
-            AcquireLock(String.Format("Hangfire:Hash:Lock"));
+            AcquireLock("Hangfire:Hash:Lock");
         }
 
         private void AcquireLock(string resource)

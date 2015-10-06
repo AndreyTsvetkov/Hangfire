@@ -44,21 +44,21 @@ namespace Hangfire.Dashboard
             Register(DeletedState.StateName, NullRenderer);
             Register(AwaitingState.StateName, AwaitingRenderer);
 
-            BackgroundStateColors.Add(EnqueuedState.StateName, "#F5F5F5");
-            BackgroundStateColors.Add(SucceededState.StateName, "#EDF7ED");
-            BackgroundStateColors.Add(FailedState.StateName, "#FAEBEA");
-            BackgroundStateColors.Add(ProcessingState.StateName, "#FCEFDC");
-            BackgroundStateColors.Add(ScheduledState.StateName, "#E0F3F8");
-            BackgroundStateColors.Add(DeletedState.StateName, "#ddd");
-            BackgroundStateColors.Add(AwaitingState.StateName, "#F5F5F5");
+            AddBackgroundStateColor(EnqueuedState.StateName, "#F5F5F5");
+            AddBackgroundStateColor(SucceededState.StateName, "#EDF7ED");
+            AddBackgroundStateColor(FailedState.StateName, "#FAEBEA");
+            AddBackgroundStateColor(ProcessingState.StateName, "#FCEFDC");
+            AddBackgroundStateColor(ScheduledState.StateName, "#E0F3F8");
+            AddBackgroundStateColor(DeletedState.StateName, "#ddd");
+            AddBackgroundStateColor(AwaitingState.StateName, "#F5F5F5");
 
-            ForegroundStateColors.Add(EnqueuedState.StateName, "#999");
-            ForegroundStateColors.Add(SucceededState.StateName, "#5cb85c");
-            ForegroundStateColors.Add(FailedState.StateName, "#d9534f");
-            ForegroundStateColors.Add(ProcessingState.StateName, "#f0ad4e");
-            ForegroundStateColors.Add(ScheduledState.StateName, "#5bc0de");
-            ForegroundStateColors.Add(DeletedState.StateName, "#777");
-            ForegroundStateColors.Add(AwaitingState.StateName, "#999");
+            AddForegroundStateColor(EnqueuedState.StateName, "#999");
+            AddForegroundStateColor(SucceededState.StateName, "#5cb85c");
+            AddForegroundStateColor(FailedState.StateName, "#d9534f");
+            AddForegroundStateColor(ProcessingState.StateName, "#f0ad4e");
+            AddForegroundStateColor(ScheduledState.StateName, "#5bc0de");
+            AddForegroundStateColor(DeletedState.StateName, "#777");
+            AddForegroundStateColor(AwaitingState.StateName, "#999");
         }
 
         public static void AddBackgroundStateColor(string stateName, string color)
@@ -205,7 +205,13 @@ namespace Hangfire.Dashboard
                 builder.AppendFormat("<dd>#{0}</dd>", stateData["WorkerNumber"]);
             }
 
-            builder.Append("</dl>");
+			if (stateData.ContainsKey("Log"))
+			{
+				builder.Append("<dt>Log:</dt>");
+				builder.AppendFormat("<dd><pre>{0}</pre></dd>", stateData["Log"]);
+			}
+			
+			builder.Append("</dl>");
 
             return new NonEscapedString(builder.ToString());
         }

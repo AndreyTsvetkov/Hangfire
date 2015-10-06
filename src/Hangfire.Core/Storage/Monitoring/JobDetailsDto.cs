@@ -25,7 +25,8 @@ namespace Hangfire.Storage.Monitoring
         public Job Job { get; set; }
         public DateTime? CreatedAt { get; set; }
         public IDictionary<string, string> Properties { get; set; }
-        public IList<StateHistoryDto> History { get; set; }
-        public DateTime? ExpireAt { get; set; }
+		public IList<StateHistoryDto> History { get; set; }
+		public IList<JobLogDto> Log { get; set; }
+		public DateTime? ExpireAt { get; set; }
     }
 }

@@ -103,6 +103,28 @@ BEGIN
         
     CREATE NONCLUSTERED INDEX [IX_HangFire_State_JobId] ON [$(HangFireSchema)].[State] ([JobId] ASC);
     PRINT 'Created index [IX_HangFire_State_JobId]';
+
+	  -- Job log table
+        
+    CREATE TABLE [$(HangFireSchema)].[Log] (
+        [Id] [int] IDENTITY(1,1) NOT NULL,
+        [JobId] [int] NOT NULL,
+        [CreatedAt] [datetime] NOT NULL,
+		[MessageClass] [nvarchar](100) NULL,
+        [MessageText] [nvarchar](max) NULL,
+            
+        CONSTRAINT [PK_HangFire_Log] PRIMARY KEY CLUSTERED ([Id] ASC)
+    );
+    PRINT 'Created table [$(HangFireSchema)].[Log]';
+
+    ALTER TABLE [$(HangFireSchema)].[Log] ADD CONSTRAINT [FK_HangFire_Log_Job] FOREIGN KEY([JobId])
+        REFERENCES [$(HangFireSchema)].[Job] ([Id])
+        ON UPDATE CASCADE
+        ON DELETE CASCADE;
+    PRINT 'Created constraint [FK_HangFire_Log_Job]';
+        
+    CREATE NONCLUSTERED INDEX [IX_HangFire_Log_JobId] ON [$(HangFireSchema)].[Log] ([JobId] ASC);
+    PRINT 'Created index [IX_HangFire_Log_JobId]';
         
     -- Job parameters table
         

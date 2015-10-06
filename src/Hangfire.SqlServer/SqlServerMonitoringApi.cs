@@ -258,7 +258,8 @@ namespace Hangfire.SqlServer
                 string sql = string.Format(@"
 select * from [{0}].Job where Id = @id
 select * from [{0}].JobParameter where JobId = @id
-select * from [{0}].State where JobId = @id order by Id desc", _storage.GetSchemaName());
+select * from [{0}].State where JobId = @id order by Id desc
+select * from [{0}].Log where JobId = @id order by Id desc", _storage.GetSchemaName());
 
                 using (var multi = connection.QueryMultiple(sql, new { id = jobId }))
                 {
@@ -280,13 +281,25 @@ select * from [{0}].State where JobId = @id order by Id desc", _storage.GetSchem
                             })
                             .ToList();
 
+	                var log =
+		                multi.Read<JobLog>()
+			                .ToList()
+			                .Select(x => new JobLogDto
+			                {
+				                MessageClass = x.MessageClass,
+								MessageText = x.MessageText, 
+								CreatedAt = x.CreatedAt
+			                })
+			                .ToList();
+
                     return new JobDetailsDto
                     {
                         CreatedAt = job.CreatedAt,
                         ExpireAt = job.ExpireAt,
                         Job = DeserializeJob(job.InvocationData, job.Arguments),
                         History = history,
-                        Properties = parameters
+                        Properties = parameters, 
+						Log = log
                     };
                 }
             });

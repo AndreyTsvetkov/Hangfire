@@ -417,6 +417,59 @@ a:hover .label-hover {
     color: white;
 }
 
+
+/* Job Log Styles */
+
+
+.job-log-item {
+    opacity: 0.8;
+}
+
+
+.job-log-item .heading {
+    padding: 2px 10px;
+    color: #666;
+    min-width: 70px;
+}
+
+.job-log-item pre {
+	-ms-border-radius: 0;
+	border-radius: 0;
+	margin: 0;
+	padding: 2px;
+}
+
+.job-log-item.Fatal {
+	background-color: #FF3333;
+	border-color: #FF3333;
+	color: #fff;
+}
+
+.job-log-item.Error {
+	background-color: #FF7700;
+	border-color: #FF7700;
+}
+
+.job-log-item.Warn {
+	background-color: #FFDD00;
+	border-color: #FFDD00;
+}
+
+.job-log-item.Info {
+	background-color: #66CC66;
+	border-color: #66CC66;
+}
+
+.job-log-item.Trace {
+	background-color: #99CCFF;
+	border-color: #99CCFF;
+}
+.job-log-item.Debug {
+	background-color: #66ffff;
+	border-color: #66ffff;
+}
+
+
 a.job-method {
     color: inherit;    
 }

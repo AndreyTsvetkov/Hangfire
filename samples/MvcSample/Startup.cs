@@ -3,6 +3,7 @@ using Hangfire.Dashboard;
 using Hangfire.SqlServer;
 using Microsoft.Owin;
 using MvcSample;
+using NLog.Targets;
 using Owin;
 
 [assembly: OwinStartup(typeof(Startup))]
@@ -14,13 +15,27 @@ namespace MvcSample
         public void Configuration(IAppBuilder app)
         {
             GlobalConfiguration.Configuration
-                .UseSqlServerStorage(@"Server=.\sqlexpress;Database=Hangfire.Sample;Trusted_Connection=True;")
-                .UseMsmqQueues(@".\Private$\hangfire{0}", "default", "critical")
+                .UseSqlServerStorage(@"Server=.;Database=Hangfire.Sample;Trusted_Connection=True;")
                 .UseDashboardMetric(SqlServerStorage.ActiveConnections)
                 .UseDashboardMetric(SqlServerStorage.TotalConnections)
                 .UseDashboardMetric(DashboardMetrics.FailedCount);
-            
-            app.UseHangfireDashboard();
-        }
+
+	        GlobalConfiguration.Configuration.UseNLogJobLogs();
+
+			app.UseHangfireDashboard("");
+			app.UseHangfireServer();
+
+			RecurringJob.AddOrUpdate("test 3", () => WorkAndLog(), "* * * * *");
+		}
+
+	    public static void WorkAndLog()
+	    {
+			NLog.LogManager.GetCurrentClassLogger().Debug("Debug");
+			NLog.LogManager.GetCurrentClassLogger().Trace("Trace");
+			NLog.LogManager.GetCurrentClassLogger().Info("Info");
+			NLog.LogManager.GetCurrentClassLogger().Warn("Warn");
+			NLog.LogManager.GetCurrentClassLogger().Error("Error");
+			NLog.LogManager.GetCurrentClassLogger().Fatal("Fatal");
+		}
     }
 }
