@@ -25,13 +25,13 @@ Task Merge -Depends Test -Description "Run ILMerge /internalize to merge assembl
     Remove-Item ((Get-SrcOutputDir "Hangfire.Core") + "\NCrontab.pdb")
     Remove-Item ((Get-SrcOutputDir "Hangfire.SqlServer") + "\Dapper.pdb")
     
-    Merge-Assembly "Hangfire.Core" @("NCrontab", "CronExpressionDescriptor", "Microsoft.Owin")
-    Merge-Assembly "Hangfire.SqlServer" @("Dapper")
+    Merge-Assembly "HangfireWL.Core" @("NCrontab", "CronExpressionDescriptor", "Microsoft.Owin")
+    Merge-Assembly "HangfireWL.SqlServer" @("Dapper")
 }
 
 Task Collect -Depends Merge -Description "Copy all artifacts to the build folder." {
-    Collect-Assembly "Hangfire.Core" "Net45"
-    Collect-Assembly "Hangfire.SqlServer" "Net45"
+    Collect-Assembly "HangfireWL.Core" "Net45"
+    Collect-Assembly "HangfireWL.SqlServer" "Net45"
     Collect-Assembly "Hangfire.SqlServer.Msmq" "Net45"
     Collect-Assembly "Hangfire.SqlServer.RabbitMq" "Net45"
     
@@ -50,11 +50,8 @@ Task Pack -Depends Collect -Description "Create NuGet packages and archive files
     
     Create-Archive "Hangfire-$version"
     
-    Create-Package "Hangfire" $version
-    Create-Package "Hangfire.Core" $version
-    Create-Package "Hangfire.SqlServer" $version
-    Create-Package "Hangfire.SqlServer.Msmq" $version
-    Create-Package "Hangfire.SqlServer.RabbitMq" $version
+    Create-Package "HangfireWL.Core" $version
+    Create-Package "HangfireWL.SqlServer" $version
 }
 
 function Run-OpenCover($assembly) {
