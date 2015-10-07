@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>HangfireWL.Core</id>
+    <version>1.6.0</version>
+    <title>Hangfire Core Components</title>
+    <authors>Sergey Odinokov/Andrey Tsvetkov</authors>
+    <owners>odinserj</owners>
+    <projectUrl>http://hangfire.io/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://raw.github.com/HangfireIO/Hangfire/master/LICENSE.md</licenseUrl>
+    <description>Core components for Hangfire (background job system for ASP.NET applications).</description>
+    <copyright>Copyright © 2013-2015 Sergey Odinokov</copyright>
+    <tags>Hangfire OWIN Long-Running Background Fire-And-Forget Delayed Recurring Tasks Jobs Scheduler Threading Queues</tags>
+    <releaseNotes>
+1.6.0
+* added support for handling and showing NLog output of the tasks
+</releaseNotes>
+    <dependencies>
+      <dependency id="Owin" version="1.0" />
+      <dependency id="Newtonsoft.Json" version="5.0.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Net45\HangfireWL.Core.dll" target="lib\net45" />
+    <file src="Net45\HangfireWL.Core.xml" target="lib\net45" />
+    <file src="Net45\HangfireWL.Core.pdb" target="lib\net45" />
+    <file src="..\src\Hangfire.Core\**\*.cs;..\src\Hangfire.Core\**\*.cshtml" target="src" />
+  </files>
+</package>
