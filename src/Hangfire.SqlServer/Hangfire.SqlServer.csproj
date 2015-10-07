@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Hangfire.SqlServer</RootNamespace>
-    <AssemblyName>HangfireWL.SqlServer</AssemblyName>
+    <AssemblyName>Hangfire.SqlServer</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\HangfireWL.SqlServer.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Hangfire.SqlServer.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
     <NoWarn>1591</NoWarn>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -35,7 +35,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\HangfireWL.SqlServer.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\Hangfire.SqlServer.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>

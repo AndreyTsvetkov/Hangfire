@@ -24,8 +24,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{15E186DF
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuspecs", "nuspecs", "{5E687025-A525-4534-8869-CB685C7B11C4}"
 	ProjectSection(SolutionItems) = preProject
-		nuspecs\HangfireWL.Core.nuspec = nuspecs\HangfireWL.Core.nuspec
-		nuspecs\HangfireWL.SqlServer.nuspec = nuspecs\HangfireWL.SqlServer.nuspec
+		nuspecs\Hangfire.Core.nuspec = nuspecs\Hangfire.Core.nuspec
+		nuspecs\Hangfire.nuspec = nuspecs\Hangfire.nuspec
+		nuspecs\Hangfire.SqlServer.MSMQ.nuspec = nuspecs\Hangfire.SqlServer.MSMQ.nuspec
+		nuspecs\Hangfire.SqlServer.nuspec = nuspecs\Hangfire.SqlServer.nuspec
+		nuspecs\Hangfire.SqlServer.RabbitMQ.nuspec = nuspecs\Hangfire.SqlServer.RabbitMQ.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{37E2BF00-C473-48A5-B2A7-5A3DE0910FCF}"

@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Hangfire;
+﻿using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.SqlServer;
 using Microsoft.Owin;
@@ -34,12 +33,9 @@ namespace MvcSample
 			NLog.LogManager.GetCurrentClassLogger().Debug("Debug");
 			NLog.LogManager.GetCurrentClassLogger().Trace("Trace");
 			NLog.LogManager.GetCurrentClassLogger().Info("Info");
-			
-			Thread.Sleep(1000);
-			
 			NLog.LogManager.GetCurrentClassLogger().Warn("Warn");
 			NLog.LogManager.GetCurrentClassLogger().Error("Error");
-	//		NLog.LogManager.GetCurrentClassLogger().Fatal("Fatal");
+			NLog.LogManager.GetCurrentClassLogger().Fatal("Fatal");
 		}
     }
 }
