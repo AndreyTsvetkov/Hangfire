@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Hangfire.Core</id>
+    <id>HangfireMK.Core</id>
     <version>0.0.0</version>
     <title>Hangfire Core Components</title>
     <authors>Sergey Odinokov</authors>
