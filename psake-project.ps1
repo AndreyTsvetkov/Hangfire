@@ -51,8 +51,8 @@ Task Pack -Depends Collect -Description "Create NuGet packages and archive files
     Create-Archive "Hangfire-$version"
     
     Create-Package "Hangfire" $version
-    Create-Package "Hangfire.Core" $version
-    Create-Package "Hangfire.SqlServer" $version
+    Create-Package "HangfireMK.Core" $version
+    Create-Package "HangfireMK.SqlServer" $version
     Create-Package "Hangfire.SqlServer.Msmq" $version
     Create-Package "Hangfire.SqlServer.RabbitMq" $version
 }
