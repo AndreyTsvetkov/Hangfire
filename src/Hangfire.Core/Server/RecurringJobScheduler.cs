@@ -178,8 +178,21 @@ namespace Hangfire.Server
 
                 var changedFields = new Dictionary<string, string>();
 
+	            const string lastJobId = "LastJobId";
+	            if (recurringJob.ContainsKey(lastJobId) && !string.IsNullOrWhiteSpace(recurringJob[lastJobId]))
+	            {
+		            var jobDetails = storage.GetMonitoringApi().JobDetails(recurringJob[lastJobId]);
+		            var finalStates = new[] {"Succeeded", "Failed", "Deleted"};
+		            if (!jobDetails.History.Select(x => x.StateName).Any(finalStates.Contains))
+		            {
+						Logger.Info("The recurring task " + recurringJobId + " is still running, do not schedule it more. ");
+			            return;
+		            }
+	            }
+
                 if (instant.GetNextInstants(lastExecutionTime).Any())
                 {
+
                     var state = new EnqueuedState { Reason = "Triggered by recurring job scheduler" };
                     if (recurringJob.ContainsKey("Queue") && !String.IsNullOrEmpty(recurringJob["Queue"]))
                     {
@@ -198,7 +211,7 @@ namespace Hangfire.Server
                     }
 
                     changedFields.Add("LastExecution", JobHelper.SerializeDateTime(instant.NowInstant));
-                    changedFields.Add("LastJobId", jobId ?? String.Empty);
+					changedFields.Add(lastJobId, jobId ?? String.Empty);
                 }
 
                 changedFields.Add("NextExecution", JobHelper.SerializeDateTime(instant.NextInstant));
