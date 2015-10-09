@@ -1,9 +1,10 @@
-﻿using Hangfire;
+﻿using System.ComponentModel;
+using System.Threading;
+using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.SqlServer;
 using Microsoft.Owin;
 using MvcSample;
-using NLog.Targets;
 using Owin;
 
 [assembly: OwinStartup(typeof(Startup))]
@@ -25,17 +26,15 @@ namespace MvcSample
 			app.UseHangfireDashboard("");
 			app.UseHangfireServer();
 
-			RecurringJob.AddOrUpdate("test 3", () => WorkAndLog(), "* * * * *");
+			RecurringJob.AddOrUpdate("test 4", () => WorkAndLog("Task 3"), "* * * * *");
 		}
 
-	    public static void WorkAndLog()
+		[DisplayName("WorkAndLog: {0}")]
+	    public static void WorkAndLog(string hangfireDisplayName)
 	    {
-			NLog.LogManager.GetCurrentClassLogger().Debug("Debug");
-			NLog.LogManager.GetCurrentClassLogger().Trace("Trace");
-			NLog.LogManager.GetCurrentClassLogger().Info("Info");
-			NLog.LogManager.GetCurrentClassLogger().Warn("Warn");
-			NLog.LogManager.GetCurrentClassLogger().Error("Error");
-			NLog.LogManager.GetCurrentClassLogger().Fatal("Fatal");
+			NLog.LogManager.GetCurrentClassLogger().Info("Started");
+			Thread.Sleep(1000 * 60 * 5);
+			NLog.LogManager.GetCurrentClassLogger().Info("Done");
 		}
     }
 }

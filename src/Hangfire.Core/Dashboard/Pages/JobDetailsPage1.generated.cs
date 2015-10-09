@@ -445,7 +445,7 @@ WriteLiteral("\t\t        <h3>Log</h3>\r\n");
             
             #line 120 "..\..\Dashboard\Pages\JobDetailsPage.cshtml"
 
-				var entriesCreationTime = job.History.Select(x => x.CreatedAt).ToArray();
+				var entriesCreationTime = job.Log.Select(x => x.CreatedAt).ToArray();
 				var nextEntry = 1;
 				foreach (var logItem in job.Log)
 				{
@@ -478,7 +478,7 @@ WriteLiteral("\">\r\n\t\t\t\t\t\t\t<span>\r\n\t\t\t\t\t\t\t\t");
 
             
             #line 128 "..\..\Dashboard\Pages\JobDetailsPage.cshtml"
-   Write(Html.ToHumanDuration(logItem.CreatedAt - (nextEntry < entriesCreationTime.Length ? entriesCreationTime[nextEntry] : job.CreatedAt)));
+   Write(Html.ToHumanDuration(logItem.CreatedAt - (nextEntry < entriesCreationTime.Length ? entriesCreationTime[nextEntry] : logItem.CreatedAt)));
 
             
             #line default
