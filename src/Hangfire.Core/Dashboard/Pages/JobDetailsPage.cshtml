@@ -125,7 +125,8 @@
 					<div class="job-log-item @logItem.MessageClass">
 						<div class="pull-right heading" title="@logItem.MessageClass">
 							<span>
-								@Html.ToHumanDuration(logItem.CreatedAt - (nextEntry < entriesCreationTime.Length ? entriesCreationTime[nextEntry] : logItem.CreatedAt))
+								@*@Html.ToHumanDuration(logItem.CreatedAt - (nextEntry < entriesCreationTime.Length ? entriesCreationTime[nextEntry] : logItem.CreatedAt))*@
+								@Html.ToHumanTime(logItem.CreatedAt)
 								@{ nextEntry++; }
 							</span>
 						</div>

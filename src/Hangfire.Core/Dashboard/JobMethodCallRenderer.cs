@@ -123,18 +123,19 @@ namespace Hangfire.Dashboard
                             var argumentRenderer = ArgumentRenderer.GetRenderer(parameter.ParameterType);
                             renderedArgument = argumentRenderer.Render(isJson, argumentValue.ToString(), argument);
                         }
-                        else
+                        else if (enumerableArgument.Name == "Argument")
                         {
-                            var renderedItems = new List<string>();
+	                        renderedArgument = string.Join(",\n", ((IEnumerable) argumentValue).Cast<object>().Select(x => x.ToString()));
+                        }
+						else
+                        {
+	                        var renderer = ArgumentRenderer.GetRenderer(enumerableArgument);
 
-                            foreach (var item in (IEnumerable) argumentValue)
-                            {
-                                var argumentRenderer = ArgumentRenderer.GetRenderer(enumerableArgument);
-                                renderedItems.Add(argumentRenderer.Render(isJson, item.ToString(),
-                                    JobHelper.ToJson(item)));
-                            }
+	                        var renderedItems = ((IEnumerable) argumentValue).Cast<object>().ToArray()
+		                        .Select(item => renderer.Render(isJson, item.ToString(), JobHelper.ToJson(item)))
+		                        .ToList();
 
-                            renderedArgument = String.Format(
+	                        renderedArgument = String.Format(
                                 WrapKeyword("new") + "{0} {{ {1} }}",
                                 parameter.ParameterType.IsArray ? " []" : "",
                                 String.Join(", ", renderedItems));

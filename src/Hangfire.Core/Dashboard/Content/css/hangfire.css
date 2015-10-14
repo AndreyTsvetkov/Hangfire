@@ -429,7 +429,7 @@ a:hover .label-hover {
 .job-log-item .heading {
     padding: 2px 10px;
     color: #666;
-    min-width: 70px;
+    width: 75px;
 }
 
 .job-log-item pre {

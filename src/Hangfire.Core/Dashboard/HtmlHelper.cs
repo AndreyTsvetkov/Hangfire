@@ -157,6 +157,15 @@ namespace Hangfire.Dashboard
                 value));
         }
 
+	    public string ToHumanTime(DateTime time)
+	    {
+		    if (DateTime.UtcNow.Date == time.Date)
+				return string.Format("{0:T}", time);
+			else if (DateTime.UtcNow.Date.AddDays(-1) == time.Date)
+				return string.Format("yesterday {0:T}", time);
+			else return string.Format("{0:G}", time);
+	    }
+
         public string ToHumanDuration(TimeSpan? duration, bool displaySign = true)
         {
             if (duration == null) return null;
