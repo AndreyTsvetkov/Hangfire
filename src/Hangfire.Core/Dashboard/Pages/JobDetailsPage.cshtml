@@ -8,115 +8,115 @@
 @using Hangfire.States
 @inherits RazorPage
 @{
-    var monitor = Storage.GetMonitoringApi();
-    var job = monitor.JobDetails(JobId.ToString());
+	var monitor = Storage.GetMonitoringApi();
+	var job = monitor.JobDetails(JobId.ToString());
 
-    string title = null;
+	string title = null;
 
-    if (job != null)
-    {
-        title = job.Job != null ? Html.JobName(job.Job) : null;
-    }
+	if (job != null)
+	{
+		title = job.Job != null ? Html.JobName(job.Job) : null;
+	}
 
-    title = title ?? "Job";
-    Layout = new LayoutPage(title);
+	title = title ?? "Job";
+	Layout = new LayoutPage(title);
 }
 
 <div class="row">
-    <div class="col-md-3">
-        @Html.JobsSidebar()
-    </div>
-    <div class="col-md-9">
-        <h1 class="page-header">@title</h1>
+	<div class="col-md-3">
+		@Html.JobsSidebar()
+	</div>
+	<div class="col-md-9">
+		<h1 class="page-header">@title</h1>
 
-        @if (job == null)
-        {
-            @: The job with id '@JobId' has expired or could not be found on the server.
-        }
-        else
-        {
-            var currentState = job.History.Count > 0 ? job.History[0] : null;
-            if (currentState != null && currentState.StateName == ProcessingState.StateName)
-            {
-                var server = monitor.Servers().FirstOrDefault(x => x.Name == currentState.Data["ServerId"]);
-                if (server == null)
-                {
-                    <div class="alert alert-danger">
-                        <strong>The job was aborted</strong> – it is processed by server
-                        <code>@currentState.Data["ServerId"]</code> which is not in the 
-                        <a href="@Url.To("/servers")">active servers</a> list for now.
-                        It will be retried automatically after invisibility timeout, but you can
-                        also re-queue or delete it manually.
-                    </div>
-                }
-                else if (server.Heartbeat.HasValue && server.Heartbeat < DateTime.UtcNow.AddMinutes(-1))
-                {
-                    <div class="alert alert-warning">
-                        <strong>Looks like the job was aborted</strong> – it is processed by server
-                        <code>@server.Name</code>, which reported its heartbeat more than 1 minute ago.
-                        It will be retried automatically after invisibility timeout, but you can
-                        also re-queue or delete it manually.
-                    </div>
-                }
-            }
+		@if (job == null)
+		{
+			@: The job with id '@JobId' has expired or could not be found on the server.
+		}
+		else
+		{
+			var currentState = job.History.Count > 0 ? job.History[0] : null;
+			if (currentState != null && currentState.StateName == ProcessingState.StateName)
+			{
+				var server = monitor.Servers().FirstOrDefault(x => x.Name == currentState.Data["ServerId"]);
+				if (server == null)
+				{
+					<div class="alert alert-danger">
+						<strong>The job was aborted</strong> – it is processed by server
+						<code>@currentState.Data["ServerId"]</code> which is not in the 
+						<a href="@Url.To("/servers")">active servers</a> list for now.
+						It will be retried automatically after invisibility timeout, but you can
+						also re-queue or delete it manually.
+					</div>
+				}
+				else if (server.Heartbeat.HasValue && server.Heartbeat < DateTime.UtcNow.AddMinutes(-1))
+				{
+					<div class="alert alert-warning">
+						<strong>Looks like the job was aborted</strong> – it is processed by server
+						<code>@server.Name</code>, which reported its heartbeat more than 1 minute ago.
+						It will be retried automatically after invisibility timeout, but you can
+						also re-queue or delete it manually.
+					</div>
+				}
+			}
 
-            if (job.ExpireAt.HasValue)
-            {
-                <div class="alert alert-info">
-                    <strong>The job is finished</strong>.
-                    It will be removed automatically <em><abbr data-moment="@JobHelper.ToTimestamp(job.ExpireAt.Value)">@job.ExpireAt</abbr></em>.
-                </div>
-            }
+			if (job.ExpireAt.HasValue)
+			{
+				<div class="alert alert-info">
+					<strong>The job is finished</strong>.
+					It will be removed automatically <em><abbr data-moment="@JobHelper.ToTimestamp(job.ExpireAt.Value)">@job.ExpireAt</abbr></em>.
+				</div>
+			}
 
-            <div class="job-snippet">
-                <div class="job-snippet-header">
-                    <span class="job-snippet-tab">
-                        Job ID: <span class="job-snippet-id">@Html.JobId(JobId.ToString(), false)</span>
-                    </span>
+			<div class="job-snippet">
+				<div class="job-snippet-header">
+					<span class="job-snippet-tab">
+						Job ID: <span class="job-snippet-id">@Html.JobId(JobId.ToString(), false)</span>
+					</span>
 
-                    <span class="job-snippet-buttons pull-right">
-                        <button class="btn btn-xs btn-default" data-ajax="@Url.To("/jobs/actions/requeue/" + JobId)" data-loading-text="Enqueueing...">Requeue</button>
-                        <button class="btn btn-xs btn-death" data-ajax="@Url.To("/jobs/actions/delete/" + JobId)" data-loading-text="Deleting..." data-confirm="Do you really want to delete this job?">Delete</button>
-                    </span>
+					<span class="job-snippet-buttons pull-right">
+						<button class="btn btn-xs btn-default" data-ajax="@Url.To("/jobs/actions/requeue/" + JobId)" data-loading-text="Enqueueing...">Requeue</button>
+						<button class="btn btn-xs btn-death" data-ajax="@Url.To("/jobs/actions/delete/" + JobId)" data-loading-text="Deleting..." data-confirm="Do you really want to delete this job?">Delete</button>
+					</span>
 
-                    <div class="clearfix"></div>
-                </div>
-                <div class="job-snippet-body">
-                    <div class="job-snippet-code">
-                        @if (job.CreatedAt.HasValue)
-                        {
-                            <div class="pull-right job-creation-date">
-                                Created
-                                @Html.RelativeTime(job.CreatedAt.Value)
-                            </div>
-                        }
-                        @if (job != null)
-                        {
-                            <pre><code>@JobMethodCallRenderer.Render(job.Job)</code></pre>
-                        }
-                        <div class="clearfix"></div>
-                    </div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="job-snippet-body">
+					<div class="job-snippet-code">
+						@if (job.CreatedAt.HasValue)
+						{
+							<div class="pull-right job-creation-date">
+								Created
+								@Html.RelativeTime(job.CreatedAt.Value)
+							</div>
+						}
+						@if (job != null)
+						{
+							<pre><code>@JobMethodCallRenderer.Render(job.Job)</code></pre>
+						}
+						<div class="clearfix"></div>
+					</div>
 
-                    @if (job.Properties.Count > 0)
-                    {
-                        <div class="job-snippet-properties">
-                            <dl>
-                                @foreach (var property in job.Properties)
-                                {
-                                    <dt>@property.Key</dt>
-                                    <dd>
-                                        <pre><code>@property.Value</code></pre>
-                                    </dd>
-                                }
-                            </dl>
-                        </div>
-                    }
-                </div>
-            </div>
+					@if (job.Properties.Count > 0)
+					{
+						<div class="job-snippet-properties">
+							<dl>
+								@foreach (var property in job.Properties)
+								{
+									<dt>@property.Key</dt>
+									<dd>
+										<pre><code>@property.Value</code></pre>
+									</dd>
+								}
+							</dl>
+						</div>
+					}
+				</div>
+			</div>
 
-	        if (job.Log.Any())
-	        {
-		        <h3>Log</h3>
+			if (job.Log.Any())
+			{
+				<h3>Log</h3>
 
 				var entriesCreationTime = job.Log.Select(x => x.CreatedAt).ToArray();
 				var nextEntry = 1;
@@ -137,61 +137,62 @@
 
 			if (job.History.Any())
 			{
-                <h3>History</h3>
-                var index = 0;
+				<h3>History</h3>
+				var index = 0;
 
-                var entriesCreationTime = job.History.Select(x => x.CreatedAt).ToArray();
-                var nextEntry = 1;
+				var entriesCreationTime = job.History.Select(x => x.CreatedAt).ToArray();
+				var nextEntry = 1;
 
-                foreach (var entry in job.History)
-                {
-                    var background = index == 0
-                        ? JobHistoryRenderer.GetForegroundStateColor(entry.StateName)
-                        : JobHistoryRenderer.GetBackgroundStateColor(entry.StateName);
+				foreach (var entry in job.History)
+				{
+					var background = index == 0
+						? JobHistoryRenderer.GetForegroundStateColor(entry.StateName)
+						: JobHistoryRenderer.GetBackgroundStateColor(entry.StateName);
 
-                    <div class="job-history @(index == 0 ? "job-history-current" : null)">
-                        <div class="job-history-heading" style="@String.Format("background-color: {0};", background)">
-                            <span class="pull-right" data-moment-title="@(JobHelper.ToTimestamp(entry.CreatedAt))">
-                                @Html.ToHumanDuration(entry.CreatedAt - (nextEntry < entriesCreationTime.Length ? entriesCreationTime[nextEntry] : job.CreatedAt))
-                                @{ nextEntry++; }
-                            </span>
-                            <h4 class="job-history-title">
-                                @entry.StateName
+					<div class="job-history @(index == 0 ? "job-history-current" : null)">
+						<div class="job-history-heading" style="@String.Format("background-color: {0};", background)">
+							<span class="pull-right" data-moment-title="@(JobHelper.ToTimestamp(entry.CreatedAt))">
+								@*@Html.ToHumanDuration(entry.CreatedAt - (nextEntry < entriesCreationTime.Length ? entriesCreationTime[nextEntry] : job.CreatedAt))*@
+								@Html.ToHumanTime(entry.CreatedAt)
+								@{ nextEntry++; }
+							</span>
+							<h4 class="job-history-title">
+								@entry.StateName
 
-                                @if (!String.IsNullOrWhiteSpace(entry.Reason))
-                                {
-                                    <small>@entry.Reason</small>
-                                }
-                            </h4>
-                        </div>
+								@if (!String.IsNullOrWhiteSpace(entry.Reason))
+								{
+									<small>@entry.Reason</small>
+								}
+							</h4>
+						</div>
 
-                        @if (JobHistoryRenderer.Exists(entry.StateName))
-                        {
-                            var rendered = Html.RenderHistory(entry.StateName, entry.Data);
-                            if (rendered != null)
-                            {
-                                <div class="job-history-body">
-                                    @rendered
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <div class="job-history-body">
-                                <dl class="dl-horizontal">
-                                    @foreach (var item in entry.Data)
-                                    {
-                                        <dt>@item.Key:</dt>
-                                        <dd>@item.Value</dd>
-                                    }
-                                </dl>
-                            </div>
-                        }
-                    </div>
+						@if (JobHistoryRenderer.Exists(entry.StateName))
+						{
+							var rendered = Html.RenderHistory(entry.StateName, entry.Data);
+							if (rendered != null)
+							{
+								<div class="job-history-body">
+									@rendered
+								</div>
+							}
+						}
+						else
+						{
+							<div class="job-history-body">
+								<dl class="dl-horizontal">
+									@foreach (var item in entry.Data)
+									{
+										<dt>@item.Key:</dt>
+										<dd>@item.Value</dd>
+									}
+								</dl>
+							</div>
+						}
+					</div>
 
-                        index++;
-                }
-            }
-        }
-    </div>
+						index++;
+				}
+			}
+		}
+	</div>
 </div>
